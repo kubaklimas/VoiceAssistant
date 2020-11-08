@@ -9,11 +9,20 @@ while True:
         print("Speak Anything :")
         audio = r.listen(source)
         try:
-            text = r.recognize_google(audio,language="pl-PL")
+            text = r.recognize_google(audio,language="en-EN")
             print("You said : {}".format(text))
             reply.speak(text)
-            time.sleep(6)
+            time.sleep(5)
         except:
-            reply.speak("Nie rozumiem co powiedziałes")
+            reply.speak("I do not understand")
 
 
+'''
+
+Długi czas oczekiwania na jego reply
+możliwe powody:
+    - r.recognize dlugo sie laduje 
+    - funkcja speak zapisuje do pliku .mp3 a nastepnie go usuwa, może nie 
+    nadążać za nowymi funkcjami 
+
+'''

@@ -9,7 +9,7 @@ def speak(text):
       os.remove('voice.mp3')
     else:
       #print("Plik dźwiekowy nie istnieje")
-      tts = gTTS(text=text, lang='pl')
+      tts = gTTS(text=text, lang='en')
       filename = 'voice.mp3'
       tts.save(filename)
       playsound.playsound(filename)
