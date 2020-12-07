@@ -5,6 +5,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from speech_rec import rec_voice
 
 
 PATH = "C:\Program Files (x86)\chromedriver.exe"
@@ -32,7 +33,7 @@ def whatdate():
     wholereply = "Today is"+d
     reply.speak(wholereply)
 
-def wiki(arg):
+def wiki():
     global driver
     if (driver == 0):
         driver = webdriver.Chrome(PATH,options=chrome_options)
@@ -42,11 +43,11 @@ def wiki(arg):
     
     driver.get("https://en.wikipedia.org/wiki/Main_Page")
     search = driver.find_element_by_id("searchInput")
-    search.send_keys(arg)
+    search.send_keys(rec_voice())
     search.send_keys(Keys.ENTER)
 
 
-def youtubeplay(title):
+def youtubeplay():
     global driver
     
     if (driver == 0):
@@ -55,10 +56,9 @@ def youtubeplay(title):
         driver.execute_script("window.open('');")
         driver.switch_to.window(driver.window_handles[1])
 
-    searchstr = str(title)
+    searchstr = rec_voice()
     driver.get("https://www.youtube.com/results?search_query="+searchstr)
     driver.find_element_by_id("video-title").click()
-
 
 def mail():
     global driver
@@ -91,17 +91,44 @@ def mail():
         driver.find_element_by_css_selector("input[type=password]").send_keys(password)
         driver.find_element_by_id('passwordNext').click()
     except:
-        print('aready logged in')
+        print('already logged in')
 
+def msg():
+    global driver
+    
+    if (driver == 0):
+        driver = webdriver.Chrome(PATH,options=chrome_options)
+    else:
+        driver.execute_script("window.open('');")
+        driver.switch_to.window(driver.window_handles[1])
+    
 
+    driver.get('https://mail.google.com/mail/u/0/#inbox?compose=new')
+    time.sleep(5)
+    temp_rec = input('To? :   ')
+    driver.find_element_by_name('to').send_keys(temp_rec)
+    
+    # set subject
+    subject = driver.find_element_by_name('subjectbox')
+    sub = rec_voice()
+    subject.send_keys(sub)
+    # message 
+    message = driver.find_element_by_id(':9g')
+    voice_message = rec_voice()
+    message.send_keys(voice_message)
+    driver.find_element_by_id(':81').click()
+    time.sleep(10)
+    #driver.quit()
     
 def whichfun():
     while True:
-        txt = int(input("Co robimy towarzyszu: "))
+        txt = int(input("Narwhals, wiki or mail: "))
         if txt==1:
-            youtubeplay('Fuck you bloody bastard bitch')
+            youtubeplay()
         elif txt==2:
-            wiki('python') 
+            wiki() 
+        elif txt==3:
+            msg()
         else:
             break
         
