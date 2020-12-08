@@ -1,16 +1,16 @@
-#import speech_recognition as sr
 from gtts import gTTS
 import os
-#import time
+import datetime
 import playsound
 
 def speak(text):
-    if os.path.exists("voice.mp3"):
-      os.remove('voice.mp3')
-    else:
-      #print("Plik dźwiekowy nie istnieje")
-      tts = gTTS(text=text, lang='en')
-      filename = 'voice.mp3'
-      tts.save(filename)
-      playsound.playsound(filename)
+    x = datetime.datetime.now()
+    a = x.strftime("%d-%b-%Y-%H-%M-%S")
+    
+    tts = gTTS(text=text, lang='en')
+    #filename = a+'.mp3'
+    filename = "bye.mp3"
+    tts.save(filename)
+    playsound.playsound(filename)
       
+speak('see ya')
