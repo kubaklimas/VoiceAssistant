@@ -1,12 +1,10 @@
-import speech_recognition as sr
 import reply_voice as reply
 import datetime
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from speech_rec import rec_voice
-
+import playsound
 
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 CUR_URL = ""
@@ -42,9 +40,12 @@ def wiki():
         driver.switch_to.window(driver.window_handles[1])
     
     driver.get("https://en.wikipedia.org/wiki/Main_Page")
+    
+    playsound.playsound("sounds/wiki.mp3")
     search = driver.find_element_by_id("searchInput")
     search.send_keys(rec_voice())
     search.send_keys(Keys.ENTER)
+    driver.find_element_by_class_name('searchmatch').click()
 
 
 def youtubeplay():
@@ -55,7 +56,8 @@ def youtubeplay():
     else:
         driver.execute_script("window.open('');")
         driver.switch_to.window(driver.window_handles[1])
-
+        
+    playsound.playsound('sounds/play.mp3')
     searchstr = rec_voice()
     driver.get("https://www.youtube.com/results?search_query="+searchstr)
     driver.find_element_by_id("video-title").click()
@@ -105,14 +107,18 @@ def msg():
 
     driver.get('https://mail.google.com/mail/u/0/#inbox?compose=new')
     time.sleep(5)
+    playsound.playsound("sounds/who.mp3")
     temp_rec = input('To? :   ')
+
     driver.find_element_by_name('to').send_keys(temp_rec)
     
     # set subject
+    playsound.playsound("sounds/subject.mp3")
     subject = driver.find_element_by_name('subjectbox')
     sub = rec_voice()
     subject.send_keys(sub)
     # message 
+    playsound.playsound("sounds/message.mp3")
     message = driver.find_element_by_id(':9g')
     voice_message = rec_voice()
     message.send_keys(voice_message)
@@ -122,15 +128,26 @@ def msg():
     
 def whichfun():
     while True:
-        txt = int(input("Narwhals, wiki or mail: "))
-        if txt==1:
+        rec = rec_voice()
+
+        if rec=='play':
             youtubeplay()
-        elif txt==2:
-            wiki() 
-        elif txt==3:
-            msg()
-        else:
+            
+        elif rec=='what day':
+            whatday()
+            
+        elif rec=='date':
+            whatdate()
+            
+        elif rec == 'wikipedia' or rec == 'Wikipedia':
+            wiki()
+            
+        elif rec=='quit':
+            playsound.playsound("sounds/bye.mp3")
             break
+        else:
+            print("sleeping")
+            time.sleep(10)
         
 whichfun()
 #youtubeplay('toxicity')
