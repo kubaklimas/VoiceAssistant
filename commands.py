@@ -37,7 +37,7 @@ def wiki():
         driver = webdriver.Chrome(PATH,options=chrome_options)
     else:
         driver.execute_script("window.open('');")
-        driver.switch_to.window(driver.window_handles[1])
+        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
     
     driver.get("https://en.wikipedia.org/wiki/Main_Page")
     
@@ -55,7 +55,7 @@ def youtubeplay():
         driver = webdriver.Chrome(PATH,options=chrome_options)
     else:
         driver.execute_script("window.open('');")
-        driver.switch_to.window(driver.window_handles[1])
+        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
         
     playsound.playsound('sounds/play.mp3')
     searchstr = rec_voice()
@@ -102,7 +102,7 @@ def msg():
         driver = webdriver.Chrome(PATH,options=chrome_options)
     else:
         driver.execute_script("window.open('');")
-        driver.switch_to.window(driver.window_handles[1])
+        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
     
 
     driver.get('https://mail.google.com/mail/u/0/#inbox?compose=new')
@@ -144,6 +144,8 @@ def whichfun():
             
         elif rec=='quit':
             playsound.playsound("sounds/bye.mp3")
+            if driver!= 0:
+                driver.quit()
             break
         else:
             print("sleeping")
