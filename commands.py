@@ -4,11 +4,13 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from speech_rec import rec_voice
+from reply_voice import speak
 import playsound
 
 PATH = "C:\Program Files (x86)\chromedriver.exe"
 CUR_URL = ""
 TITLE = ""
+WAKE = "hey Lulu"
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('headless-false')
@@ -45,7 +47,10 @@ def wiki():
     search = driver.find_element_by_id("searchInput")
     search.send_keys(rec_voice())
     search.send_keys(Keys.ENTER)
-    driver.find_element_by_class_name('searchmatch').click()
+    try:
+        driver.find_element_by_class_name('searchmatch').click()
+    except:
+        pass
 
 
 def youtubeplay():
@@ -125,37 +130,68 @@ def msg():
     driver.find_element_by_id(':81').click()
     time.sleep(10)
     #driver.quit()
-    
+
+def scrolldown():
+    try:
+        html = driver.find_element_by_tag_name('html')
+        html.send_keys(Keys.PAGE_DOWN)
+    except:
+        speak("I cannot scroll")
+
+def scrollup():
+    try:
+        html = driver.find_element_by_tag_name('html')
+        html.send_keys(Keys.PAGE_UP)
+    except:
+        speak("I cannot scroll")    
+
 def whichfun():
     while True:
-        rec = rec_voice()
-
-        if rec=='play':
-            youtubeplay()
-            
-        elif rec=='what day':
-            whatday()
-            
-        elif rec=='date':
-            whatdate()
-            
-        elif rec == 'wikipedia' or rec == 'Wikipedia':
-            wiki()
-            
-        elif rec=='quit':
+        awake =  rec_voice()
+        if awake=='quit':
             playsound.playsound("sounds/bye.mp3")
             if driver!= 0:
                 driver.quit()
             break
-        else:
-            print("sleeping")
-            time.sleep(10)
         
-whichfun()
-#youtubeplay('toxicity')
-#print(URL)
-#youtubenext()
+        if awake==WAKE:
+            speak("How can i help you")
+            rec = rec_voice()
+    
+            if rec=='play':
+                youtubeplay()
+                
+            elif rec=='what day':
+                whatday()
+                
+            elif rec=='date':
+                whatdate()
+                
+            elif rec == 'wikipedia' or rec == 'Wikipedia':
+                wiki()
+                
+            elif rec == 'message':
+                msg()
+                
+            elif rec== 'higher':
+                scrollup()
+                
+            elif rec== 'scroll down':
+                scrolldown()
+                
+            elif rec=='quit':
+                playsound.playsound("sounds/bye.mp3")
+                if driver!= 0:
+                    driver.quit()
+                break
+            else:
+                speak("i don\'t understand")
+                time.sleep(7)
+        
 
 
+
+if __name__=='__main__':
+    whichfun()
 
 
